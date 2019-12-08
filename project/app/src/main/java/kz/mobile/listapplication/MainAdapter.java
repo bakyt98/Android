@@ -11,15 +11,17 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
-    private ArrayList<Place> places;
-
+//    private List<Place> places;
+    private List<RetroPhoto> places;
     private ItemClickListener itemClickListener;
 
-    public MainAdapter(ArrayList<Place> places, ItemClickListener itemClickListener) {
+    public MainAdapter(List<RetroPhoto> places, ItemClickListener itemClickListener) {
         super();
         this.places = places;
         this.itemClickListener = itemClickListener;
@@ -37,11 +39,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     @Override
     public void onBindViewHolder(@NonNull MainViewHolder holder, final int position) {
         Glide.with(holder.imageView.getContext()).load(
-                places.get(position).getPhoto()
+                places.get(position).getThumbnailUrl()
         ).into(holder.imageView);
-        holder.textViewPlaceName.setText(places.get(position).getName());
-        holder.textViewCityCountry.setText(places.get(position).getCity_country());
-        holder.textViewPrice.setText(places.get(position).getPrice()+" euro");
+        holder.textViewPlaceName.setText(places.get(position).getTitle());
+//        String city_country = places.get(position).getCity() + " (" + places.get(position).getCountry() + ")";
+        holder.textViewCityCountry.setText("City (Country)");
+        holder.textViewPrice.setText("50 euro");
         holder.setItemClick(places.get(position));
     }
 
@@ -67,7 +70,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
         }
 
-        public void setItemClick(final Place item) {
+        public void setItemClick(final RetroPhoto item) {
 
             obj.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -80,8 +83,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         }
     }
 
-    interface ItemClickListener {
+    public interface ItemClickListener {
 
-        void onItemClick(Place item, int position);
+        void onItemClick(RetroPhoto item, int position);
     }
 }

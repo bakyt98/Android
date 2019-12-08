@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import kz.mobile.listapplication.R;
+
 public class SecondActivity extends AppCompatActivity {
 
     private TextView textViewPlaceName;

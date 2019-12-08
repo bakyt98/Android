@@ -2,18 +2,43 @@ package kz.mobile.listapplication;
 
 import android.widget.ImageView;
 
+import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONObject;
+
 public class Place {
-    private int photo;
+    @SerializedName("id")
+    private int id;
+    @SerializedName("avatar")
+    private String avatar;
+    @SerializedName("name")
     private String name;
-    private String city_country;
+    @SerializedName("city")
+    private JSONObject city;
+    @SerializedName("country")
+    private JSONObject country;
+    @SerializedName("price")
     private int price;
+    @SerializedName("address")
+    private String address;
     private String working_days;
     private String working_hours;
 
-    public Place(String name, int photo, String city_country, int price, String working_days, String working_hours ){
+    public Place(int id, String name, String avatar, JSONObject city, JSONObject country, int price, String address){
+        this.id = id;
         this.name = name;
-        this.photo = photo;
-        this.city_country = city_country;
+        this.avatar = avatar;
+        this.city = city;
+        this.country = country;
+        this.price = price;
+        this.address = address;
+    }
+
+    public Place(String name, String avatar, JSONObject city, JSONObject country, int price, String working_days, String working_hours ){
+        this.name = name;
+        this.avatar = avatar;
+        this.city = city;
+        this.country = country;
         this.price = price;
         this.working_days = working_days;
         this.working_hours = working_hours;
@@ -23,13 +48,18 @@ public class Place {
         return this.name;
     }
 
-    public int getPhoto() {
-        return this.photo;
+    public String getAvatar() {
+        return this.avatar;
     }
 
-    public String getCity_country(){
-        return this.city_country;
+    public JSONObject getCity(){
+        return this.city;
     }
+
+    public JSONObject getCountry(){
+        return this.country;
+    }
+
     public String getWorking_days(){
         return this.working_days;
     }

@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">bTravel</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
+    <string name="title_profile">Profile</string>
+    <string name="country_prompt">Choose a country</string>
+
+    <string-array name="country_arrays">
+        <item>Germany</item>
+        <item>Czech Republic</item>
+        <item>Spain</item>
+        <item>France</item>
+        <item>Italy</item>
+    </string-array>
+
+    <string name="city_prompt">Choose a city</string>
+
+    <string name="budget_hint">Enter a budget</string>
+    <string name="search_button">Search</string>
+    <string-array name="city_arrays">
+        <item>Berlin</item>
+        <item>Prague</item>
+        <item>Barcelona</item>
+        <item>Paris</item>
+        <item>Milan</item>
+    </string-array>
+
+    <string-array name="category_arrays">
+        <item>Art</item>
+        <item>Sport</item>
+        <item>Food</item>
+        <item>Zoo</item>
+    </string-array>
 </resources>

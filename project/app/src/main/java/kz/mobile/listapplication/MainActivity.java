@@ -1,47 +1,29 @@
 package kz.mobile.listapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import java.util.ArrayList;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private RecyclerView recyclerView;
-
-    private MainAdapter mainAdapter;
-
-    private MainAdapter.ItemClickListener itemClickListener = new MainAdapter.ItemClickListener() {
-        @Override
-        public void onItemClick(Place item, int position) {
-            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-            intent.putExtra("place_name", item.getName());
-            intent.putExtra("place_photo", item.getPhoto());
-            intent.putExtra("place_city", item.getCity_country());
-            intent.putExtra("place_price", item.getPrice());
-            startActivity(intent);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ArrayList<Place> places = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            Place place = new Place("Place " + (i+1), R.drawable.photo,
-                    "City (Country)", 200, "Mon - Sun", "09:00 - 17:00");
-            places.add(place);
-        }
-        mainAdapter = new MainAdapter(places, itemClickListener);
-        recyclerView.setAdapter(mainAdapter);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
     }
 }

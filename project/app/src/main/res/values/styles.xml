@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimary">@color/colorTitle</item>
         <item name="android:textColor">@color/colorBlack</item>
-        <item name="android:textColorPrimary">@color/colorTitle</item>
+        <item name="android:textColorPrimary">@color/colorBlack</item>
         <!--        <item name="colorPrimaryDark">@color/colorWhite</item>-->
         <item name="colorAccent">@color/colorTitle</item>
     </style>
