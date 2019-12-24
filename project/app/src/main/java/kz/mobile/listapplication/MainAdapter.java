@@ -1,5 +1,6 @@
 package kz.mobile.listapplication;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,18 @@ import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
-//    private List<Place> places;
     private List<RetroPhoto> places;
     private ItemClickListener itemClickListener;
 
     public MainAdapter(List<RetroPhoto> places, ItemClickListener itemClickListener) {
         super();
         this.places = places;
+        this.itemClickListener = itemClickListener;
+    }
+
+    public MainAdapter(ItemClickListener itemClickListener) {
+        super();
+        this.places = new ArrayList<RetroPhoto>();
         this.itemClickListener = itemClickListener;
     }
 
@@ -39,8 +45,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     @Override
     public void onBindViewHolder(@NonNull MainViewHolder holder, final int position) {
         Glide.with(holder.imageView.getContext()).load(
-                places.get(position).getThumbnailUrl()
+                places.get(position).getUrl()
         ).into(holder.imageView);
+        Log.d("Adapter", places.toString());
+        Log.d("Adapter", "lalallaa");
         holder.textViewPlaceName.setText(places.get(position).getTitle());
 //        String city_country = places.get(position).getCity() + " (" + places.get(position).getCountry() + ")";
         holder.textViewCityCountry.setText("City (Country)");
@@ -51,6 +59,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     @Override
     public int getItemCount() {
         return places.size();
+    }
+
+    public void replaceData(List<RetroPhoto> retroPhotos) {
+        places = retroPhotos;
+        notifyDataSetChanged();
     }
 
     public class MainViewHolder extends RecyclerView.ViewHolder {

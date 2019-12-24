@@ -1,32 +1,45 @@
 package kz.mobile.listapplication.ui.home;
 
-import android.content.Intent;
-import android.os.Bundle;
+import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import java.util.List;
 
-import java.util.ArrayList;
-
-import kz.mobile.listapplication.Place;
-import kz.mobile.listapplication.R;
+import kz.mobile.listapplication.GetDataService;
+import kz.mobile.listapplication.RetroPhoto;
+import kz.mobile.listapplication.RetrofitClientInstance;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    public MutableLiveData<List<RetroPhoto>> liveData;
 
     public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        liveData = new MutableLiveData<>();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void getData() {
+        Log.d("HomeViewModel", "getData()");
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        Call<List<RetroPhoto>> call = service.getAllPhotos();
+        call.enqueue(new Callback<List<RetroPhoto>>() {
+            @Override
+            public void onResponse(Call<List<RetroPhoto>> call, Response<List<RetroPhoto>> response) {
+                Log.d("HomeViewModel2", "getData()2");
+                Log.d("HomeViewModel3", response.body().toString());
+                liveData.postValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<RetroPhoto>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("response", "ERROR!!!!");
+            }
+        });
     }
 
 }

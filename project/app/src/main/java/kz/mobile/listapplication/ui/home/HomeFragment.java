@@ -5,29 +5,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import kz.mobile.listapplication.GetDataService;
 import kz.mobile.listapplication.MainAdapter;
-import kz.mobile.listapplication.Place;
 import kz.mobile.listapplication.R;
 import kz.mobile.listapplication.RetroPhoto;
-import kz.mobile.listapplication.RetrofitClientInstance;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
@@ -47,42 +41,34 @@ public class HomeFragment extends Fragment {
             bundle.putString("place_price", "50 euro");
             DetailFragment detail = new DetailFragment();
             detail.setArguments(bundle);
-//            detail.setTargetFragment(HomeFragment.this, 2);
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.nav_host_fragment, detail)
                     .commit();
         }
     };
-//
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        recyclerView = root.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
-        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-        Call<List<RetroPhoto>> call = service.getAllPhotos();
-        call.enqueue(new Callback<List<RetroPhoto>>() {
-            @Override
-            public void onResponse(Call<List<RetroPhoto>> call, Response<List<RetroPhoto>> response) {
-                generateDataList(response.body());
-            }
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        mainAdapter = new MainAdapter(itemClickListener);
+        recyclerView.setAdapter(mainAdapter);
+        homeViewModel.getData();
+        homeViewModel.liveData.observe(getViewLifecycleOwner(), new Observer<List<RetroPhoto>>() {
             @Override
-            public void onFailure(Call<List<RetroPhoto>> call, Throwable t) {
-                Log.d("response", "ERROR!!!!");
+            public void onChanged(@Nullable List<RetroPhoto> retroPhotos) {
+                mainAdapter.replaceData(retroPhotos);
             }
         });
-
-        return root;
     }
 
-    /*Method to generate List of data using RecyclerView with custom adapter*/
-    private void generateDataList(List<RetroPhoto> photoList) {
-        mainAdapter = new MainAdapter(photoList, itemClickListener);
-        recyclerView.setAdapter(mainAdapter);
-    }
 }

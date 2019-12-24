@@ -17,6 +17,8 @@
     <string name="city_prompt">Choose a city</string>
 
     <string name="budget_hint">Enter a budget</string>
+
+    <string name="title_hint">Enter a title</string>
     <string name="search_button">Search</string>
     <string-array name="city_arrays">
         <item>Berlin</item>

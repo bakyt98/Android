@@ -5,11 +5,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +35,8 @@ import retrofit2.Response;
 public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
-    private Spinner spinner;
+    private EditText title;
+    private Button search;
     private RecyclerView recyclerView;
 
     private MainAdapter mainAdapter;
@@ -46,7 +51,6 @@ public class DashboardFragment extends Fragment {
             bundle.putString("place_price", "50 euro");
             DetailFragment detail = new DetailFragment();
             detail.setArguments(bundle);
-//            detail.setTargetFragment(HomeFragment.this, 2);
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.nav_host_fragment, detail)
@@ -56,31 +60,41 @@ public class DashboardFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        spinner = root.findViewById(R.id.spinner1);
-        recyclerView = root.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
-        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-        Call<List<RetroPhoto>> call = service.getAllPhotos();
-        call.enqueue(new Callback<List<RetroPhoto>>() {
-            @Override
-            public void onResponse(Call<List<RetroPhoto>> call, Response<List<RetroPhoto>> response) {
-                generateDataList(response.body());
-            }
 
-            @Override
-            public void onFailure(Call<List<RetroPhoto>> call, Throwable t) {
-                Log.d("response", "ERROR!!!!");
+        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel.class);
+        title = view.findViewById(R.id.editTextTitle);
+        search = view.findViewById(R.id.button);
+        search.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (!title.getText().toString().matches(""))
+                    dashboardViewModel.findData(title.getText().toString());
+                else dashboardViewModel.getData();
+                dashboardViewModel.liveData.observe(getViewLifecycleOwner(), new Observer<List<RetroPhoto>>() {
+                    @Override
+                    public void onChanged(@Nullable List<RetroPhoto> retroPhotos) {
+                        mainAdapter.replaceData(retroPhotos);
+                    }
+                });
             }
         });
-        return root;
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        mainAdapter = new MainAdapter(itemClickListener);
+        recyclerView.setAdapter(mainAdapter);
+        dashboardViewModel.getData();
+        dashboardViewModel.liveData.observe(getViewLifecycleOwner(), new Observer<List<RetroPhoto>>() {
+            @Override
+            public void onChanged(@Nullable List<RetroPhoto> retroPhotos) {
+                mainAdapter.replaceData(retroPhotos);
+            }
+        });
     }
 
-    /*Method to generate List of data using RecyclerView with custom adapter*/
-    private void generateDataList(List<RetroPhoto> photoList) {
-        mainAdapter = new MainAdapter(photoList, itemClickListener);
-        recyclerView.setAdapter(mainAdapter);
-    }
+
 }

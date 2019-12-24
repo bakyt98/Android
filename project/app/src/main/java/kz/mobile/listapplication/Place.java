@@ -14,17 +14,18 @@ public class Place {
     @SerializedName("name")
     private String name;
     @SerializedName("city")
-    private JSONObject city;
+    private City city;
     @SerializedName("country")
-    private JSONObject country;
+    private Country country;
     @SerializedName("price")
     private int price;
     @SerializedName("address")
     private String address;
-    private String working_days;
-    private String working_hours;
+    @SerializedName("place_type")
+    private int place_type;
 
-    public Place(int id, String name, String avatar, JSONObject city, JSONObject country, int price, String address){
+    public Place(int id, String name, String avatar, City city, Country country,
+                 int price, String address, int place_type){
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -32,16 +33,7 @@ public class Place {
         this.country = country;
         this.price = price;
         this.address = address;
-    }
-
-    public Place(String name, String avatar, JSONObject city, JSONObject country, int price, String working_days, String working_hours ){
-        this.name = name;
-        this.avatar = avatar;
-        this.city = city;
-        this.country = country;
-        this.price = price;
-        this.working_days = working_days;
-        this.working_hours = working_hours;
+        this.place_type = place_type;
     }
 
     public String getName(){
@@ -52,20 +44,14 @@ public class Place {
         return this.avatar;
     }
 
-    public JSONObject getCity(){
+    public City getCity(){
         return this.city;
     }
 
-    public JSONObject getCountry(){
+    public Country getCountry(){
         return this.country;
     }
 
-    public String getWorking_days(){
-        return this.working_days;
-    }
-    public String getWorking_hours(){
-        return this.working_hours;
-    }
     public int getPrice(){
         return this.price;
     }
